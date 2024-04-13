@@ -6,10 +6,9 @@ const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 dotenv.config();
 const morgan = require("morgan");
+const logger = require("./src/config/logger");
 
 const app = express();
-
-const accessLogStream = require("./src/config/log");
 
 //라우팅
 const home = require("./src/routes/home");
@@ -23,11 +22,8 @@ app.use(bodyParser.json());
 //URL을 통해 전달되는 데이터에 한글, 공백 등과 같은 문자가 포함될 경우 제대로 인식되지 않음
 app.use(bodyParser.urlencoded({ extended: true}));
 
-/*
-//morgan을 이용하 로그 출력
-app.use(morgan("dev"));
-app.use(morgan("common", { stream: accessLogStream }));
-*/
+//morgan을 이용한 로그 출력
+app.use(morgan("tiny", { stream: logger.stream }));
 
 app.use("/", home); // use -> 미들 웨어를 등록해주는 메서드.
 
